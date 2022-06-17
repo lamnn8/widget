@@ -1,0 +1,39 @@
+{
+  "name": "use-wallet-demo",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.3",
+    "@reduxjs/toolkit": "^1.6.1",
+    "ethers": "^5.4.6",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-hook-form": "^7.31.3",
+    "react-redux": "^7.2.5",
+    "react-scripts": "4.0.0",
+    "sass": "^1.39.0",
+    "sass-loader": "^12.1.0",
+    "styled-components": "5.2.1",
+    "use-wallet": "0.8.1",
+    "web3": "1.3.4"
+  },
+  "devDependencies": {
+    "typescript": "4.1.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

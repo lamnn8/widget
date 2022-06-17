@@ -1,0 +1,49 @@
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+}
+.account-content {
+  display: flex;
+  justify-content: center;
+}
+.account-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  padding: 5px;
+
+  div:not(:last-child) {
+    margin-bottom: 5px;
+  }
+
+  .account {
+    text-overflow: ellipsis;
+    color: grey;
+    font-weight: 600;
+    font-size: small;
+
+    &:hover {
+      color: black;
+      cursor: pointer;
+    }
+  }
+
+  .balance {
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .connect-button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #ffffffee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
