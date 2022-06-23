@@ -1,0 +1,43 @@
+.app-btn {
+  min-width: 160px;
+  min-height: 54px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1rem;
+  font-weight: bold;
+  font-style: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  &.primary {
+    background: linear-gradient(
+      90deg,
+      #0060fd -60.25%,
+      #00a4fa -21.77%,
+      #01c1ec 13.74%,
+      #00cdf0 46.96%,
+      #00ddda 77.89%,
+      #00ecda 107.67%,
+      #00f8da 153.48%
+    );
+    color: #fff;
+    box-shadow: #00cdf0 0px 1px 5px;
+  }
+
+  &.secondary {
+    background: #fefefe;
+    color: #6a6969;
+    box-shadow: #6a6969 0px 1px 5px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &:hover {
+    opacity: 0.9;
+    cursor: pointer;
+  }
+}

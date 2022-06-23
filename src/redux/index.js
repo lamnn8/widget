@@ -30,6 +30,9 @@ export const langSlice = createSlice({
     },
   },
 });
+
 export const ChainId = 97;
 export const { updateProvider, updateSigner } = langSlice.actions;
 export default langSlice.reducer;
+
+// "https://data-seed-prebsc-2-s2.binance.org:8545"

@@ -1,0 +1,35 @@
+.input-icon {
+  label {
+    //   color: var(--00cdf7);;
+    font-weight: 400;
+    font-size: 0.875rem;
+  }
+  position: relative;
+  &__suffix {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    & + input {
+      padding-right: 3.125rem;
+    }
+  }
+
+  &__prefix {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    & + input {
+      padding-left: 3.125rem;
+    }
+  }
+
+  input {
+    height: 3rem;
+    //   background: var(--222744) !important;
+    //   color: var(--dark-night) !important;
+    border-color: #4d4d4d !important;
+    //   border-radius: var(--radius-12);
+  }
+}

@@ -4,14 +4,10 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-image: linear-gradient(
-    to right top,
-    #051937,
-    #00384d,
-    #1f5558,
-    #527262,
-    #858c74
-  );
+  background-image: url("../assets/atel.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
   background-attachment: fixed;
 }
 

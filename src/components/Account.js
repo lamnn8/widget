@@ -14,24 +14,33 @@ import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { switchChainMetaMask } from "../utils/switchChain";
-import ERC20ABI from "../abi/erc20abi.json";
-
+import { useParamater } from "../hook/useParamater";
+import { useGetToken } from "../hook/useGetToken";
+import { useERC20Contract } from "../hook/useContract";
+//spinner
+import { SpinnerCircular } from "spinners-react";
+//component
+import { AppButton } from "./AppButton";
+import { CardTitle } from "reactstrap";
 export const Account = () => {
   const wallet = useWallet();
-  const signer = useSelector((state) => state.ether.signer);
-  const [listToken, setListToken] = useState([]);
+  const { signer } = useSelector((state) => state.ether);
+  const { amount, recipient, contract } = useParamater();
+  const { symbol, balance } = useGetToken();
+  const useToken = useERC20Contract(contract, signer);
   const onSubmit = async ({ amount, address }) => {
     try {
-      const txHash = await signer.sendTransaction({
-        to: ethers.utils.getAddress(address),
-        value: Number(amount * 1e18).toString(),
-      });
+      const txHash = await useToken.transfer(
+        address,
+        Number(amount * 1e18).toString()
+      );
       console.log(txHash, "txHash");
+      alert(txHash);
     } catch (err) {
+      alert(err.message);
       console.log(err.message);
     }
   };
-
   const {
     register,
     handleSubmit,
@@ -51,141 +60,90 @@ export const Account = () => {
     switchChainMetaMask(56);
     wallet.connect();
   }, []);
-
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const getAllToken = async () => {
-    const tokenaddress = ["0xae18f6c514a500a30eaff19f1d1b7b320986eb72"];
-    const myaddresss = wallet.account;
-    for (let contract of tokenaddress) {
-      const token = new ethers.Contract(contract, ERC20ABI, signer);
-
-      const tokenBalance = await token.balanceOf(myaddresss);
-      const symbol = await token.symbol();
-
-      const balance = +tokenBalance / 1e18;
-      setListToken((ktx) => [...ktx, { symbol: symbol, balanceOf: balance }]);
-    }
-  };
   return (
     <div>
       <div className="account-header">
         <div>
-          <p>Account: {wallet && wallet.account}</p>
+          {/* <p>Account: {wallet && wallet.account}</p>
           <p>
             Balance:
             {wallet &&
-              formatNumber(ethers.utils.formatUnits(wallet.balance, "ether"))}
-          </p>
+              formatNumber(
+                ethers.utils.formatUnits(wallet.balance, "ether")
+              )}{" "}
+            BNB
+          </p> */}
         </div>
-
         <div>
           {wallet.account ? (
-            <>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => wallet.reset()}
-              >
-                disconnect
-              </Button>
-            </>
+            <AppButton onClick={() => wallet.reset()}>disconnect</AppButton>
           ) : (
             <div className="connect-button">
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => wallet.connect()}
-              >
-                Connect Metamask
-              </Button>
+              <AppButton onClick={() => wallet.connect()}>connect</AppButton>
             </div>
           )}
         </div>
       </div>
       <div className="account-content">
-        {/* <button onClick={() => getAllToken()}>getalltoken</button> */}
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Card sx={{ minWidth: 275 }}>
-            <CardContent>
-              {/* <FormControl sx={{ m: 1, minWidth: 220 }}>
-                <InputLabel id="demo-simple-select-helper-label">
-                  Network
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  label="Netword"
-                  required
-                  value={network}
-                  {...register("network", { onChange: (e) => handleChange(e) })}
-                >
-                  <MenuItem value={56}>Binance smart chain</MenuItem>
-
-                 
-                  <MenuItem value={4}>Rinkebi</MenuItem>
-                </Select>
-              </FormControl> */}
-              <FormControl sx={{ m: 1, minWidth: 320 }}>
-                <TextField
-                  id="outlined-basic"
-                  label="Address"
-                  variant="outlined"
-                  {...register("address", {
-                    required: true,
-                    pattern: /^0x[a-fA-F0-9]{40}$/g,
-                  })}
-                />
-              </FormControl>
-            </CardContent>
-          </Card>
-          <Card style={{ marginTop: "2rem" }}>
-            <CardContent>
-              <FormControl sx={{ m: 1, minWidth: 220 }}>
-                <TextField
-                  id="outlined-basic"
-                  label="Amount"
-                  variant="outlined"
-                  {...register("amount", {
-                    required: true,
-                    // pattern: /^[0-9]*$/,
-                  })}
-                />
-              </FormControl>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">
-                  Token
-                </InputLabel>
-                <Select
-                  value={fiat}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Without label" }}
-                  {...register("fiat", {
-                    required: true,
-                    onChange: (e) => handleFiat(e),
-                  })}
-                >
-                  <MenuItem value="USDT">
-                    <em>USDT</em>
-                  </MenuItem>
-                  <MenuItem value={"BNB"}>BNB</MenuItem>
-                  <MenuItem value={"BTC"}>BTC</MenuItem>
-                  <MenuItem value={"ETH"}>ETH</MenuItem>
-                </Select>
-              </FormControl>
-              <ul>
-                {listToken.map((value) => {
-                  return <li>{value.symbol}</li>;
-                })}
-              </ul>
-            </CardContent>
-          </Card>
-          <div style={{ textAlign: "center", marginTop: "2rem" }}>
-            <Button variant="contained" color="success" type="submit">
-              Payment
-            </Button>
-          </div>
+          {symbol ? (
+            <Card sx={{ minWidth: 420 }}>
+              <CardContent>
+                <div className="account-title"> Payment getway</div>
+                <br />
+                <FormControl sx={{ m: 1, minWidth: 420 }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Recipient"
+                    variant="outlined"
+                    {...register("address", {
+                      required: true,
+                      pattern: /^0x[a-fA-F0-9]{40}$/g,
+                      value: recipient,
+                    })}
+                    disabled={true}
+                  />
+                </FormControl>
+                <br />
+                <FormControl sx={{ m: 1, minWidth: 420 }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Amount"
+                    variant="outlined"
+                    {...register("amount", {
+                      required: true,
+                      pattern: /^[0-9]*$/,
+                      value: amount,
+                    })}
+                    disabled={true}
+                  />
+                </FormControl>
+                <br />
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  Balance: {balance} {symbol}
+                </FormControl>
+                <div style={{ textAlign: "center", marginTop: "2rem" }}>
+                  {wallet.account ? (
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      className="button-custom primary  "
+                    >
+                      Transfers
+                    </Button>
+                  ) : (
+                    <AppButton onClick={() => wallet.connect()}>
+                      Connect Metamask
+                    </AppButton>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <div style={{ textAlign: "center" }}>
+              <SpinnerCircular thickness={200} size={100} color="#00a4fa" />
+            </div>
+          )}
         </form>
       </div>
     </div>
