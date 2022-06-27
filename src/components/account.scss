@@ -7,9 +7,12 @@
   font-size: 23px;
 }
 .account-content {
-  display: flex;
-  justify-content: center;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
+
 .account-block {
   position: relative;
   display: flex;

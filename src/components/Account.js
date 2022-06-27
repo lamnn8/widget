@@ -22,12 +22,18 @@ import { SpinnerCircular } from "spinners-react";
 //component
 import { AppButton } from "./AppButton";
 import { CardTitle } from "reactstrap";
+import Alert from "@mui/material/Alert";
+
+//short address
+import { showShortAddress } from "../utils/shortAddress";
 export const Account = () => {
   const wallet = useWallet();
   const { signer } = useSelector((state) => state.ether);
   const { amount, recipient, contract } = useParamater();
   const { symbol, balance } = useGetToken();
   const useToken = useERC20Contract(contract, signer);
+  const [success, setSuccess] = useState(false);
+  const [warning, setWarning] = useState(false);
   const onSubmit = async ({ amount, address }) => {
     try {
       const txHash = await useToken.transfer(
@@ -35,9 +41,9 @@ export const Account = () => {
         Number(amount * 1e18).toString()
       );
       console.log(txHash, "txHash");
-      alert(txHash);
+      setSuccess(true);
     } catch (err) {
-      alert(err.message);
+      setWarning(true);
       console.log(err.message);
     }
   };
@@ -62,6 +68,42 @@ export const Account = () => {
   }, []);
   return (
     <div>
+      {success && (
+        <Alert
+          severity="success"
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                window.history.back();
+              }}
+            >
+              Go Back
+            </Button>
+          }
+        >
+          Transaction success
+        </Alert>
+      )}
+      {warning && (
+        <Alert
+          severity="warning"
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                window.history.back();
+              }}
+            >
+              Go Back
+            </Button>
+          }
+        >
+          Transaction fail
+        </Alert>
+      )}
       <div className="account-header">
         <div>
           {/* <p>Account: {wallet && wallet.account}</p>
@@ -76,7 +118,9 @@ export const Account = () => {
         </div>
         <div>
           {wallet.account ? (
-            <AppButton onClick={() => wallet.reset()}>disconnect</AppButton>
+            <AppButton onClick={() => wallet.reset()}>
+              {wallet && showShortAddress(wallet.account)}
+            </AppButton>
           ) : (
             <div className="connect-button">
               <AppButton onClick={() => wallet.connect()}>connect</AppButton>
